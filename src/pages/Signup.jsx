@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import CryptoJS from "crypto-js";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -21,7 +22,10 @@ function Signup() {
       return;
     }
 
-    users.push(data);
+    users.push({
+      ...data,
+      password: CryptoJS.SHA256(data.password).toString(),
+    });
 
     localStorage.setItem("users", JSON.stringify(users));
 

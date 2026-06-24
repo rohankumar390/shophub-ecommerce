@@ -2,9 +2,18 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import CryptoJS from "crypto-js";
+import jwtEncode from "jwt-encode";
 import { loginSuccess } from "../redux/slices/authSlice";
-import { loginUser } from "../services/authService";
+const generateToken = (username) => {
+  return jwtEncode(
+    {
+      username: username,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+    },
+    "demo-secret",
+  );
+};
 
 function Login() {
   const dispatch = useDispatch();
@@ -16,41 +25,36 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     try {
       const users = JSON.parse(localStorage.getItem("users")) || [];
+      const hashedPassword = CryptoJS.SHA256(data.password).toString();
+
       const localUser = users.find(
-        (u) => u.username === data.username && u.password === data.password,
+        (u) => u.username === data.username && u.password === hashedPassword,
       );
 
-      if (localUser) {
-        const token = crypto.randomUUID();
-        localStorage.setItem("token", token);
-        dispatch(loginSuccess({ user: localUser, token }));
-        toast.success("Login successful");
-        navigate("/");
+      if (!localUser) {
+        toast.error("Invalid username or password");
         return;
       }
-    } catch (e) {
-      console.log(e);
-    }
 
-    try {
-      const result = await loginUser({
-        username: data.username,
-        password: data.password,
-        expiresInMins: 60,
-      });
+      const token = generateToken(localUser.username);
 
-      const token = result.accessToken || result.token;
       localStorage.setItem("token", token);
 
-      dispatch(loginSuccess({ user: result, token }));
+      dispatch(
+        loginSuccess({
+          user: localUser,
+          token,
+        }),
+      );
+
       toast.success("Login successful");
       navigate("/");
     } catch (error) {
-      console.log(error);
-      toast.error("Invalid username or password");
+      console.error(error);
+      toast.error("Something went wrong");
     }
   };
 

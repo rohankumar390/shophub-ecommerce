@@ -16,7 +16,6 @@ function Navbar() {
   const cartItems = useCart().items;
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  console.log(totalItems);
   const handleLogout = () => {
     dispatch(logout());
   };
