@@ -80,7 +80,6 @@ function AdminProducts() {
               </div>
             </div>
 
-            {/* Desktop Layout */}
             <div className="hidden md:grid grid-cols-12 items-center">
               <div className="col-span-6">
                 <h3 className="font-medium">{product.title}</h3>
