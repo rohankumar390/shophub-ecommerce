@@ -45,7 +45,7 @@ function AdminProducts() {
       </div>
 
       <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-        <div className="grid grid-cols-12 bg-gray-100 p-4 font-semibold">
+        <div className="hidden md:grid grid-cols-12 bg-gray-100 p-4 font-semibold">
           <div className="col-span-6">Product</div>
 
           <div className="col-span-2">Price</div>
@@ -54,34 +54,58 @@ function AdminProducts() {
         </div>
 
         {products.map((product) => (
-          <div
-            key={product.id}
-            className="grid grid-cols-12 items-center p-4 border-b"
-          >
-            <div className="col-span-6">
-              <h3 className="font-medium">{product.title}</h3>
+          <div key={product.id} className="border-b p-4">
+            <div className="md:hidden space-y-3">
+              <h3 className="font-medium text-lg">{product.title}</h3>
+
+              <p className="text-gray-600">Price: ${product.price}</p>
+
+              <div className="flex gap-2">
+                <Link
+                  to={`/admin/products/edit/${product.id}`}
+                  className="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                >
+                  Edit
+                </Link>
+
+                <button
+                  onClick={() => {
+                    dispatch(deleteProduct(product.id));
+                    toast.success("Product deleted successfully");
+                  }}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
 
-            <div className="col-span-2">${product.price}</div>
+            {/* Desktop Layout */}
+            <div className="hidden md:grid grid-cols-12 items-center">
+              <div className="col-span-6">
+                <h3 className="font-medium">{product.title}</h3>
+              </div>
 
-            <div className="col-span-4 flex justify-end gap-3">
-              <Link
-                to={`/admin/products/edit/${product.id}`}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
-              >
-                Edit
-              </Link>
+              <div className="col-span-2">${product.price}</div>
 
-              <button
-                onClick={() => {
-                  dispatch(deleteProduct(product.id));
+              <div className="col-span-4 flex justify-end gap-3">
+                <Link
+                  to={`/admin/products/edit/${product.id}`}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                >
+                  Edit
+                </Link>
 
-                  toast.success("Product deleted successfully");
-                }}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
-              >
-                Delete
-              </button>
+                <button
+                  onClick={() => {
+                    dispatch(deleteProduct(product.id));
+                    toast.success("Product deleted successfully");
+                  }}
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         ))}
