@@ -79,9 +79,8 @@ function Products() {
             Explore our collection of quality products.
           </p>
         </div>
-
         <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-medium w-fit">
-          Showing {filteredProducts.length} Products
+          Showing {paginatedProducts.length} Products
         </span>
       </div>
 
