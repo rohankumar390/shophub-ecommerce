@@ -78,13 +78,15 @@ function EditProduct() {
           <div>
             <input
               type="number"
+              step="0.01"
+              min="0"
               className="w-full border rounded-lg p-3"
               placeholder="Price"
               {...register("price", {
                 required: "Price is required",
                 min: {
-                  value: 1,
-                  message: "Price must be greater than 0",
+                  value: 0,
+                  message: "Price cannot be negative",
                 },
               })}
             />
