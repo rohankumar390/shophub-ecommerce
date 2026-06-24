@@ -12,11 +12,15 @@ function Checkout() {
   const { items, subtotal, discountAmount, gst, total } = useCart();
 
   const handlePlaceOrder = () => {
+    const orderId = `ORD-${Date.now()}`;
+
+    localStorage.setItem("lastOrderId", orderId);
+
     dispatch(clearCart());
 
     toast.success("Order placed successfully");
 
-    navigate("/");
+    navigate("/order-confirmation");
   };
 
   if (items.length === 0) {

@@ -6,6 +6,7 @@ import CreateProduct from "../pages/CreateProduct";
 import EditProduct from "../pages/EditProduct";
 import Home from "../pages/Home";
 import Products from "../pages/Products";
+import OrderConfirmation from "../pages/OrderConfirmation";
 import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
@@ -60,6 +61,14 @@ function AppRoutes() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route
+        path="/order-confirmation"
+        element={
+          <ProtectedRoute>
+            <OrderConfirmation />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
