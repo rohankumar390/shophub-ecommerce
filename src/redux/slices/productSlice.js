@@ -13,13 +13,8 @@ export const fetchProducts =
         }
     );
 
-const localProducts =
-    JSON.parse(
-        localStorage.getItem("customProducts")
-    ) || [];
-
 const initialState = {
-    products: localProducts,
+    products: [],
     loading: false,
     error: null,
 };

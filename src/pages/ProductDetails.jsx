@@ -1,46 +1,38 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-
+import useProduct from "../hooks/useProduct";
 import { addToCart } from "../redux/slices/cartSlice";
-import { getProductById } from "../services/productService";
+import { fetchProducts } from "../redux/slices/productSlice";
 
 function ProductDetails() {
   const { id } = useParams();
 
   const dispatch = useDispatch();
 
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { products, loading } = useProduct();
+
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
+
+  const product = products.find((item) => item.id === Number(id));
 
   const handleAddToCart = useCallback(() => {
+    if (!product) return;
+
     dispatch(addToCart(product));
 
     toast.success("Product added to cart");
   }, [dispatch, product]);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const data = await getProductById(id);
-
-        setProduct(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [id]);
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        {" "}
-        <h2 className="text-2xl font-semibold">Loading Product... </h2>{" "}
+        <h2 className="text-2xl font-semibold">Loading Product...</h2>
       </div>
     );
   }
@@ -48,8 +40,7 @@ function ProductDetails() {
   if (!product) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        {" "}
-        <h2 className="text-xl text-red-500">Product not found </h2>{" "}
+        <h2 className="text-xl text-red-500">Product not found</h2>
       </div>
     );
   }
@@ -90,11 +81,13 @@ function ProductDetails() {
               </p>
 
               <p>
-                <span className="font-semibold">Rating:</span> {product.rating}
+                <span className="font-semibold">Rating:</span>{" "}
+                {product.rating || "N/A"}
               </p>
 
               <p>
-                <span className="font-semibold">Stock:</span> {product.stock}
+                <span className="font-semibold">Stock:</span>{" "}
+                {product.stock ?? "N/A"}
               </p>
             </div>
 

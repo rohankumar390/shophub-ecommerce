@@ -6,6 +6,7 @@ import { fetchProducts } from "../redux/slices/productSlice";
 import useProduct from "../hooks/useProduct";
 
 const PRODUCTS_PER_PAGE = 8;
+
 function Products() {
   const dispatch = useDispatch();
 
@@ -16,10 +17,8 @@ function Products() {
   const { products, loading, error } = useProduct();
 
   useEffect(() => {
-    if (products.length === 0) {
-      dispatch(fetchProducts());
-    }
-  }, [dispatch, products.length]);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const filteredProducts = useMemo(() => {
     const filtered = products.filter(
@@ -79,8 +78,10 @@ function Products() {
             Explore our collection of quality products.
           </p>
         </div>
+
         <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-medium w-fit">
-          Showing {paginatedProducts.length} Products
+          Showing {paginatedProducts.length} of {filteredProducts.length}{" "}
+          Products
         </span>
       </div>
 
@@ -105,13 +106,9 @@ function Products() {
           className="border rounded-lg p-3"
         >
           <option value="">Sort By</option>
-
           <option value="price-low-high">Price: Low to High</option>
-
           <option value="price-high-low">Price: High to Low</option>
-
           <option value="name-asc">Name: A-Z</option>
-
           <option value="name-desc">Name: Z-A</option>
         </select>
       </div>
